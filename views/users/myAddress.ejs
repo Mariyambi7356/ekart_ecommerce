@@ -1,0 +1,38 @@
+<section class="address d-flex justify-content-center">
+  
+    <div class="col-lg-6">
+      <h3> Update Address</h3>
+    
+      <% for (let i=0; i < user.address.length; i++) { %>
+        <div class="border mt-2">
+          <label>
+    
+            <div>
+              <%= user.address[i].name %>,<%= user.address[i].address %>
+            </div>
+    
+            <div>
+              <%= user.address[i].city %>,<%= user.address[i].zip %>
+            </div>
+    
+            <div>
+              <%= user.address[i].district %>
+            </div>
+            <div>
+              <%= user.address[i].state %>
+            </div>
+            <div>
+              <%= user.address[i].mobile %>,<%= user.address[i].number %>,
+            </div>
+            <div>
+              <a href="/myAddress?index=<%= i %>">Edit</a>
+              <a style="color: red;" href="/deleteAddress?index=<%= i %>">Delete</a>
+            </div>
+    
+          </label>
+    
+        </div>
+        <% } %>
+    </div>
+  </section>
+  

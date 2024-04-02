@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="zxx">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>teccas</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- animate CSS -->
+  <link rel="stylesheet" href="css/animate.css">
+  <!-- owl carousel CSS -->
+  <link rel="stylesheet" href="css/owl.carousel.min.css">
+  <!-- nice select CSS -->
+  <link rel="stylesheet" href="css/nice-select.css">
+  <!-- font awesome CSS -->
+  <link rel="stylesheet" href="css/all.css">
+  <!-- flaticon CSS -->
+  <link rel="stylesheet" href="css/flaticon.css">
+  <link rel="stylesheet" href="css/themify-icons.css">
+  <!-- font awesome CSS -->
+  <link rel="stylesheet" href="css/magnific-popup.css">
+  <!-- swiper CSS -->
+  <link rel="stylesheet" href="css/slick.css">
+  <link rel="stylesheet" href="css/price_rangs.css">
+  <!-- style CSS -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="/images/teccas.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body>
+  <header class="main_menu home_menu">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-12">
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <h1></h1>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="menu_icon"><i class="fas fa-bars"></i></span>
+            </button>
+
+            <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <h1 class="nav mt-3">Teccas</h1>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link " href="/shop" id="navbarDropdown_1" role="button" aria-haspopup="true"
+                    aria-expanded="false">
+                    Shop
+                  </a>
+
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/profile">Profile</a>
+                </li>
+
+
+
+
+
+                <li class="nav-item">
+                  <div class="dropdown mt-4 ms-5">
+                    <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton1"
+                      data-bs-toggle="dropdown">
+                      Click
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <% if(session!=null){ %>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        <% }else{%>
+                          <li><a class="dropdown-item" href="/login">Login</a></li>
+                          <li><a class="dropdown-item" href="/signup">Signup</a></li>
+                          <%}%>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="hearer_icon d-flex">
+
+              <a href="/wishlist"><i class="ti-heart"></i></a>
+              <div class="dropdown cart">
+                <a class="dropdown-toggle" id="navbarDropdown3" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <a href="/cart"><i class="fas fa-cart-plus"></i></a>
+                </a>
+
+
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+
+  <section class="breadcrumb breadcrumb_bg">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="breadcrumb_iner">
+            <div class="breadcrumb_iner_item">
+              <h2> Checkout</h2>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--================Checkout Area =================-->
+ 
+  <!--================End Checkout Area =================-->
+  <section class="checkout_area padding_top mb-5">
+    <div class="container">
+      <div class="returning_customer">
+        <div class="check_title">
+
+        </div>
+
+
+      </div>
+      <div class="cupon_area">
+
+        <h2 class="mb-2">Enter coupon details</h2>
+        <form id="coupon-form-submit">
+
+          <input type="text" placeholder="Enter coupon code" id="coupon" name="coupon">
+          <% if (allCoupons.length > 0) { %>
+
+          <h6 class="mb-2 ml-4 pl-2">Coupons for you</h6>
+            <select id="couponSelect" name="coupon" class="ml-4 pl-3" onchange="copyCoupon(this.value)">
+              <% allCoupons.forEach(function(coupon) { %>
+                <option value="<%= coupon.couponCode %>">
+                  <%= coupon.couponName %> - <%= coupon.couponCode %>
+                </option>
+              <% }); %>
+            </select>
+          <% } %>
+          
+
+          <button class="btn_3 ms-4 ml-4" type="submit" form="coupon-form-submit" id="applyCoupon"> Apply Coupon</button>
+          <small id="codestate "></small>
+
+
+
+
+
+
+
+        </form>
+    
+
+
+
+
+      </div>
+
+
+      <form action="/paymentPage" method="post" id="addressForm">
+        <div class="billing_details">
+          <div class="row">
+
+            <div class="col-lg-7">
+              <% if(typeof msg !=='undefined' ){ %>
+
+                <p style="
+                        font-size: small;
+                        color: rgb(0, 61, 3);
+                        font-family: 'EB Garamond', serif;
+                      " class="ms-3">
+                  <%= msg %>
+                </p>
+
+                <% } %>
+                 
+                <div class="ml-4">
+                  <h4 class="mt-4"> <a href="/addAddress">Add New Address +</a> </h4>
+
+                  <% for (let i=0; i < userAddress.length; i++) { %>
+                    <div class="mt-4 border p-3" style="border-radius: 10px;">
+                      <label>
+                        <input <%= defaultAddress === i ? 'checked' : '' %> type="radio" name="address" value="<%= i %>">
+                        <div>
+                          <%= userAddress[i].name %>,<%= userAddress[i].address %>
+                        </div>
+
+                        <div>
+                          <%= userAddress[i].city %>,<%= userAddress[i].zip %>
+                        </div>
+
+                        <div>
+                          <%= userAddress[i].district %>
+                        </div>
+                        <div>
+                          <%= userAddress[i].state %>
+                        </div>
+                        <div>
+                          <%= userAddress[i].mobile %>,<%= userAddress[i].number %>,
+                        </div>
+                        <div>
+                          <a href="/editAddress?index=<%= i %>">Edit</a>
+                          <a style="color: red;" href="/deleteAddress?index=<%= i %>">Delete</a>
+                        </div>
+
+                      </label>
+
+                    </div>
+                    <% } %>
+
+
+                </div>
+
+            </div>
+
+
+
+
+
+            <div class="col-lg-5 mt-5">
+              <div class="order_box">
+                <h2>Your Order</h2>
+                <ul class="list">
+                  <li>
+                    <a>Product
+                      <span>Total</span>
+                    </a>
+                  </li>
+                  <% items.forEach(function(item) { %>
+                    <li>
+                      <a>
+                        <%= item.product.productName %>
+                          <span class="middle">x <%= item.quantity %></span>
+                          <span class="last">$<span id="price-<%= item._id %>">
+                              <%= (item.price * item.quantity).toFixed(2) %>
+                            </span>
+                      </a>
+                    </li>
+                    <% }); %>
+
+                </ul>
+                <ul class="list list_2">
+                  <li>
+
+                  </li>
+                  <li>
+                    <a id="dicount" style="text-decoration: none; pointer-events: none;">Coupon Discount
+
+                      <span id="disc" name="disc" class="text-success">0</span>
+                  </li>
+                  <li>
+                    <a id="dicount" style="text-decoration: none; pointer-events: none;">Delivery Charge
+
+                      <span id="disc" name="disc" class="">$ 40</span>
+                  </li>
+
+                  <li>
+                    <a href="#">Total
+                      <span id="ok">$ <%=(totalPrice  +40).toFixed(2) %></span>
+                    </a>
+                  </li>
+                </ul>
+
+
+                <% if(wallet > 0) { %>
+                  <div class="payment_item active">
+                    <div class="radion_btn">
+                      <input type="radio" id="f-option6" value="wallet" name="flexRadioDefault" />
+                      <label for="f-option6">Use Wallet </label>
+  
+                      <div class="check"></div>
+                    </div>
+                <% } %>
+                  <p>
+                    Balance: <%= wallet %>
+                  </p>
+                </div>
+                
+
+
+                <input type="hidden" name="totalPrice" id="totalPrice" value="<%= (totalPrice + 40).toFixed(2)  %>">
+                <input type="hidden" name="couponCode" id="couponCode">
+                <input type="hidden" name="totalDiscount" id="totalDiscount">
+
+
+
+
+                <button type="submit" class="btn_3 mt-3" style="display: none;width: 25rem;"  id="continue">Coninue with wallet</button>
+                <p onclick="razorpay()"  id="rzp-button" class="btn_3 mt-3">Pay With Razorpay</p>
+                <% if (totalPrice < 1000) { %>
+                 
+                  <p onclick="success('COD')" class="btn_3 mt-3">COD</p>
+              <% } %>
+              
+              
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section> <section class="checkout_area padding_top mb-5">
+    <div class="container">
+      <div class="returning_customer">
+        <div class="check_title">
+
+        </div>
+
+
+      </div>
+      
+
+
+  <!-- ::footer_part start:: -->
+  <footer class="footer_part" style="background-color:#e9ecef;">
+    <div class="container">
+      <div class="row justify-content-around">
+        <div class="col-sm-6 col-lg-2">
+          <div class="single_footer_part">
+            <h4>Top Products</h4>
+            <ul class="list-unstyled">
+              <li><a>H&M</a></li>
+              <li><a>Jack & JONES</a></li>
+              <li><a>ADIDAS</a></li>
+              <li><a>NIKE</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <div class="single_footer_part">
+            <h4>Quick Links</h4>
+            <ul class="list-unstyled">
+              <li><a href="/profile">PROFILE</a></li>
+              <li><a href="/shop">SHOP</a></li>
+              <li><a href="/cart">CART</a></li>
+              <li><a href="/wishlist">WISHLIST</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <div class="single_footer_part">
+            <h4>Features</h4>
+            <ul class="list-unstyled">
+              <li><a>Wallet</a></li>
+              <li><a>Pagination</a></li>
+              <li><a>Return</a></li>
+              <li><a>Filter</a></li>
+            </ul>
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+
+    <div class="d-flex justify-content-center mt-5">
+      <div class="footer_icon social_icon">
+        <ul class="list-unstyled">
+          <li><a class="single_social_icon" href="https://github.com/mariyambi" target="_blank"><i
+                class="fa-brands fa-github"></i></a></li>
+          <li><a class="single_social_icon" href="https://twitter.com/mariyambi" target="_blank"><i
+                class="fab fa-twitter"></i></a></li>
+          <li><a class="single_social_icon" href="https://www.linkedin.com/in/mariyambi-701125249"
+              target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
+          <li><a class="single_social_icon" href="https://instagram.com/mariyambi?igshid=YmMyMTA2M2Y="
+              target="_blank"><i class="fa-brands fa-square-instagram"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  <!-- ::footer_part end:: -->
+
+  <!-- jquery plugins here-->
+  <!-- jquery -->
+  <script src="js/jquery-1.12.1.min.js"></script>
+  <!-- popper js -->
+  <script src="js/popper.min.js"></script>
+  <!-- bootstrap js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <!-- easing js -->
+  <script src="js/jquery.magnific-popup.js"></script>
+  <!-- swiper js -->
+  <script src="js/swiper.min.js"></script>
+  <!-- swiper js -->
+  <script src="js/masonry.pkgd.js"></script>
+  <!-- particles js -->
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.nice-select.min.js"></script>
+  <!-- slick js -->
+  <script src="js/slick.min.js"></script>
+  <script src="js/jquery.counterup.min.js"></script>
+  <script src="js/waypoints.min.js"></script>
+  <script src="js/contact.js"></script>
+  <script src="js/jquery.ajaxchimp.min.js"></script>
+  <script src="js/jquery.form.js"></script>
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="js/mail-script.js"></script>
+  <script src="js/stellar.js"></script>
+  <script src="js/price_rangs.js"></script>
+  <!-- custom js -->
+  <script src="js/custom.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+  <script>
+
+    $("#coupon-form-submit").submit((e) => {
+      let couponValue = document.getElementById('coupon').value;
+      e.preventDefault();
+      $.ajax({
+        url: '/checkCoupon',
+        method: 'post',
+        data: { coupon: couponValue },
+        success: (response) => {
+          if (response.status) {
+            console.log(response.discountPrice)
+            document.getElementById('couponCode').value = couponValue;
+            document.getElementById('totalDiscount').value = response.discountPrice;
+            $("#total").load(location.href + " #total");
+            //document.getElementById('coupon1').innerText = couponValue
+            $("#discount1").val(response.discountPrice);
+            $("#coupon1").val(couponValue);
+            //$("#discount1").val(discountValue);
+            document.getElementById('disc').innerText = '$' + response.discountPrice
+            console.log(response.amount);
+            document.getElementById('ok').innerText = '$' + response.amount
+
+            document.getElementById('totalPrice').value = parseInt(response.amount+40);
+
+            document.getElementById('codestate').style.color = "green"
+            document.getElementById('codestate').innerText = 'Coupon applied successfully'
+            $("#cancelBtn").show();
+            $("#applyCoupon").hide();
+          } else if (response.used) {
+            document.getElementById('codestate').style.color = "red"
+            document.getElementById('codestate').innerText = 'Coupon already used!'
+          } else if (response.expired) {
+            document.getElementById('codestate').style.color = "red"
+            document.getElementById('codestate').innerText = 'Sorry coupon is expired!'
+          } else if (response.noMatch) {
+            document.getElementById('codestate').style.color = "red"
+            document.getElementById('codestate').innerText = 'Oops invalid coupon code!'
+          } else if (response.lowPrice) {
+            document.getElementById('codestate').style.color = "red"
+            document.getElementById('codestate').innerText = 'Can"t apply for this purchase!'
+          }
+        }
+      })
+    })
+
+  </script>
+
+<script>
+  document.getElementById("f-option6").addEventListener("change", function() {
+    var button = document.getElementById("continue");
+    if (this.checked) {
+      button.style.display = "block";
+    } else {
+      button.style.display = "none";
+    }
+  });
+</script>
+
+ 
+
+<script>
+  const addressForm = document.getElementById('addressForm');
+  const submitButton = addressForm.querySelector('.btn_3');
+
+  submitButton.addEventListener('click', function (event) {
+    const selectedAddress = addressForm.querySelector('input[name="address"]:checked');
+    if (!selectedAddress) {
+      event.preventDefault(); 
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please select an address.',
+      }); 
+    }
+  });
+
+  function copyCoupon(couponCode) {
+    // Check if the clipboard API is supported by the browser
+    if (!navigator.clipboard) {
+      console.error('Clipboard API not supported.');
+      return;
+    }
+
+    // Attempt to copy coupon code to clipboard
+    navigator.clipboard.writeText(couponCode)
+      .then(() => {
+        alert('Coupon code copied to clipboard: ' + couponCode);
+      })
+      .catch(err => {
+        console.error('Failed to copy coupon code:', err);
+      });
+  }
+
+  $("#coupon-form-submit").submit((e) => {
+    let couponValue = document.getElementById('coupon').value;
+    e.preventDefault();
+    $.ajax({
+      url: '/checkCoupon',
+      method: 'post',
+      data: { coupon: couponValue },
+      success: (response) => {
+        if (response.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Coupon Applied',
+            text: 'Coupon applied successfully',
+          });
+          $("#cancelBtn").show();
+          $("#applyCoupon").hide();
+        } else if (response.used) {
+          
+          Swal.fire({
+            icon: 'error',
+            title: 'Coupon Error',
+            text: 'Coupon already used!',
+          });
+        } else if (response.expired) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Coupon Error',
+            text: 'Sorry, the coupon is expired!',
+          });
+        } else if (response.noMatch) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Coupon Error',
+            text: 'Oops, invalid coupon code!',
+          });
+        } else if (response.lowPrice) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Coupon Error',
+            text: 'Can\'t apply for this purchase!',
+          });
+        }
+      }
+    });
+  });
+</script>
+
+
+
+<script>
+  function razorpay() {
+    let orderamount= document.getElementById('totalPrice').value;
+          let amount=orderamount*100
+    $.ajax({
+      url: '/razorpayPayment?orderAmount=' + orderamount,
+      type: 'get',
+      dataType: 'json',
+      contentType: 'appilaction/json',
+
+      success: (res) => {
+        console.log("res");
+
+        if (res.order) {
+          let orderamount= document.getElementById('totalPrice').value;
+          let amount=orderamount*100
+          
+          console.log('gshcghg');
+          var options = {
+            "key": "rzp_test_vXi9kqY9B879FW",
+            "amount":amount,
+            "currency": "INR",
+            "name": "Acme Corp",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": res.order.id, 
+            "handler": function (response) {
+              console.log(response)
+              console.log("response")
+              success()
+            },
+            "prefill": {
+              "name": "Gaurav Kumar",
+              "email": "gaurav.kumar@example.com",
+              "contact": "9000090000"
+            },
+            "notes": {
+              "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+              "color": "#3399cc"
+            }
+          };
+          var rzp1 = new Razorpay(options);
+
+        
+
+          rzp1.open();
+           var rzp1 = new Razorpay(options);
+          document.getElementById('rzp-button').onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
+           }
+        }
+
+        function Wallet() {
+    console.log("Wallet payment selected");
+
+        }
+
+
+      }
+    })
+  }
+
+ let totalPrice = document.getElementById('totalPrice').value
+ let couponCode = document.getElementById('couponCode').value
+ let totalDiscount = document.getElementById('totalDiscount').value
+
+  function success(Payment) {
+    Swal.fire({
+    icon: 'success',
+    title: 'Payment Successful',
+    text: 'Thank you for your purchase!',
+  });
+    location.href = `/orderConfirmation?totalPrice=${totalPrice}&couponCode=${couponCode}&totalDiscount${totalDiscount}&payment=${Payment}`
+  }
+</script>
+
+<!-- <script>
+ let totalPrice = document.getElementById('totalPrice').value
+ let couponCode = document.getElementById('couponCode').value
+ let totalDiscount = document.getElementById('totalDiscount').value
+
+  function success() {
+    location.href = `/orderConfirmation?totalPrice=${totalPrice}&couponCode${couponCode}&totalDiscount${totalDiscount}`
+  }
+</script> -->
+
+<script>
+  
+    const radioButtons = document.getElementsByName("flexRadioDefault");
+
+   
+    document.getElementById("payment").addEventListener("submit", function (event) {
+      
+      event.preventDefault();
+
+      let radioButtonSelected = false;
+
+      
+      for (let i = 0; i < radioButtons.length; i++) {
+        if (radioButtons[i].checked) {
+          radioButtonSelected = true;
+          break;
+        }
+      }
+
+     
+      if (!radioButtonSelected) {
+        alert("Please select a payment option.");
+        return;
+      }
+
+  
+      this.submit();
+    });
+
+</script>

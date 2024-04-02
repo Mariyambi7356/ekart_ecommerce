@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="zxx">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>teccas</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- animate CSS -->
+  <link rel="stylesheet" href="css/animate.css">
+  <!-- owl carousel CSS -->
+  <link rel="stylesheet" href="css/owl.carousel.min.css">
+  <!-- nice select CSS -->
+  <link rel="stylesheet" href="css/nice-select.css">
+  <!-- font awesome CSS -->
+  <link rel="stylesheet" href="css/all.css">
+  <!-- flaticon CSS -->
+  <link rel="stylesheet" href="css/flaticon.css">
+  <link rel="stylesheet" href="css/themify-icons.css">
+  <!-- font awesome CSS -->
+  <link rel="stylesheet" href="css/magnific-popup.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <!-- swiper CSS -->
+  <link rel="stylesheet" href="css/slick.css">
+  <link rel="stylesheet" href="css/price_rangs.css">
+  <link rel="shortcut icon" href="/images/teccas.jpg" type="image/x-icon">
+  <!-- style CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header class="main_menu home_menu">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-12">
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <h1></h1>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="menu_icon"><i class="fas fa-bars"></i></span>
+            </button>
+
+            <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <h1 class="nav mt-3">Teccas</h1>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link " href="/shop" id="navbarDropdown_1" role="button" aria-haspopup="true"
+                    aria-expanded="false">
+                    Shop
+                  </a>
+
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/profile">Profile</a>
+                </li>
+
+
+
+
+
+                <li class="nav-item">
+                  <div class="dropdown mt-4 ms-5">
+                    <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton1"
+                      data-bs-toggle="dropdown">
+                      Click
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <% if(session!=null){ %>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        <% }else{%>
+                          <li><a class="dropdown-item" href="/login">Login</a></li>
+                          <li><a class="dropdown-item" href="/signup">Signup</a></li>
+                          <%}%>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="hearer_icon d-flex">
+
+              <a href="/wishlist"><i class="ti-heart"></i></a>
+              <div class="dropdown cart">
+                <a class="dropdown-toggle" id="navbarDropdown3" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-cart-plus"></i>
+                </a>
+
+
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+
+  <!--================Cart Area =================-->
+  <section class="cart_area padding_top">
+    <div class="container">
+      <div class="cart_inner">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+
+
+              <% items.forEach((item)=> { %>
+                <tr>
+                  <td>
+                    <div class="media">
+                      <div class="d-flex">
+                        <img class="img-fluid" style="height: 100px;width: 100px;" src="<%= item.product.productImages[0] %>"
+                          alt="<%= item.product.productName %>" />
+
+                      </div>
+                      <div class="media-body">
+
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <h5 style="font-weight: bolder;">
+                      <%= item.product.productName %>
+                    </h5>
+                  </td>
+                  <td>
+                    <h5 style="font-weight: bolder;" id="total-price-<%= item._id %>">$<%= (item.price ) %>
+                    </h5>
+
+                  </td>
+                  <td>
+                    <div class="product_count">
+                      <button class="quantity__minus btn" min="1" data-id="<%=item._id%>" data-index=""
+                        onclick="decrementCart(event)">-</button>
+                      <input min="1" max="10" class="input-number-<%= item._id %>" type="text" value="<%= item.quantity %>" readonly>
+                      <button class="quantity__plus btn" data-id="<%=item._id%>" data-index="<%=item._id%>"
+                        onclick="incrementCart(event)"> +</button>
+
+                      <button style="background-color: white;" class="remove-item-btn btn "
+                        data-item-id="<%=item._id%>"><i class="fa-sharp fa-solid fa-circle-xmark"></i></button>
+                        <p  id="out-ofstock-<%=item._id%>" class="text-sm ml-4 pl-2" style="font-size: xx-small; color: red;display: none;">Out of stock</p>
+                    </div>
+                  </td>
+                  <td>
+                    <p style="font-weight: bolder;"> $<span id="price-<%= item._id %>">
+                        <%= (item.price * item.quantity).toFixed(2) %>
+                      </span></p>
+                  </td>
+                </tr>
+                <% }); %>
+                  <tr>
+                    <td> </td>
+                    
+                    <td></td>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                    <td>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><h5 style="font-weight: bolder;">Total Amount = </td>
+                    
+                    <td></td>
+                    <td>
+                    <td>
+
+                    </td>
+                    </td>
+                    <td>
+                      
+                        <span style="font-weight: bolder;" id="total-price">$<%= totalPrice.toFixed(2) %></span> 
+                        </span></h5>
+
+                    </td>
+                  </tr>
+
+            </tbody>
+          </table>
+          <div class="checkout_btn_inner float-right">
+            <a class="btn_1" href="/shop">Continue Shopping</a>
+            <a class="btn_1 checkout_btn_1 mt-3" href="/checkout">Proceed to checkout</a>
+          </div>
+        </div>
+      </div>
+  </section>
+  <!--================End Cart Area =================-->
+
+  <!-- ::footer_part start:: -->
+  <footer class="footer_part mt-5" style="background-color:#e9ecef;">
+    <div class="container">
+      <div class="row justify-content-around">
+        <div class="col-sm-6 col-lg-2">
+          <div class="single_footer_part">
+            <h4>Top Products</h4>
+            <ul class="list-unstyled">
+              <li><a>H&M</a></li>
+              <li><a>Jack & JONES</a></li>
+              <li><a>ADIDAS</a></li>
+              <li><a>NIKE</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <div class="single_footer_part">
+            <h4>Quick Links</h4>
+            <ul class="list-unstyled">
+              <li><a href="/profile">PROFILE</a></li>
+              <li><a href="/shop">SHOP</a></li>
+              <li><a href="/cart">CART</a></li>
+              <li><a href="/wishlist">WISHLIST</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-2">
+          <div class="single_footer_part">
+            <h4>Features</h4>
+            <ul class="list-unstyled">
+              <li><a>Wallet</a></li>
+              <li><a>Pagination</a></li>
+              <li><a>Return</a></li>
+              <li><a>Filter</a></li>
+            </ul>
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+    <div class="d-flex justify-content-center mt-5">
+      <div class="footer_icon social_icon">
+        <ul class="list-unstyled">
+          <li><a class="single_social_icon" href="https://github.com/mariyambi" target="_blank"><i
+                class="fa-brands fa-github"></i></a></li>
+          <li><a class="single_social_icon" href="https://twitter.com/mariyambi" target="_blank"><i
+                class="fab fa-twitter"></i></a></li>
+          <li><a class="single_social_icon" href="https://www.linkedin.com/in/mariyambi-701125249"
+              target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
+          <li><a class="single_social_icon" href="https://instagram.com/mariyambi?igshid=YmMyMTA2M2Y="
+              target="_blank"><i class="fa-brands fa-square-instagram"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  <!-- ::footer_part end:: -->
+
+
+  <!-- jquery plugins here-->
+  <!-- jquery -->
+  <script src="js/jquery-1.12.1.min.js"></script>
+  <!-- popper js -->
+  <script src="js/popper.min.js"></script>
+  <!-- bootstrap js -->
+  <script src="js/bootstrap.min.js"></script>
+  <!-- easing js -->
+  <script src="js/jquery.magnific-popup.js"></script>
+  <!-- swiper js -->
+  <script src="js/swiper.min.js"></script>
+  <!-- swiper js -->
+  <script src="js/masonry.pkgd.js"></script>
+  <!-- particles js -->
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.nice-select.min.js"></script>
+  <!-- slick js -->
+  <script src="js/slick.min.js"></script>
+  <script src="js/jquery.counterup.min.js"></script>
+  <script src="js/waypoints.min.js"></script>
+  <script src="js/contact.js"></script>
+  <script src="js/jquery.ajaxchimp.min.js"></script>
+  <script src="js/jquery.form.js"></script>
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="js/mail-script.js"></script>
+  <script src="js/stellar.js"></script>
+  <script src="js/price_rangs.js"></script>
+  <!-- custom js -->
+  <script src="js/custom.js"></script>
+
+<!-- SweetAlert CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+
+
+<script>
+
+function incrementCart(event) {
+  event.preventDefault();
+  const itemId = event.target.dataset.id; // Get the id of the item associated with the button
+  console.log(itemId)
+  console.log("itemId")
+
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', '/incrementCart');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const response = JSON.parse(xhr.responseText);
+      const updatedPrice = response.updatedPrice;
+      const priceElement = document.querySelector(`#price-${itemId}`);
+      priceElement.textContent = updatedPrice;
+      const totalElement = document.querySelector('#total-price');
+      totalElement.textContent = response.totalPrice.toFixed(2);
+      const inputField = document.querySelector('.input-number-' + itemId);
+    let value = parseInt(inputField.value);
+    value = isNaN(value) ? 1 : value;
+    if (value < 20) { 
+        value++;
+        inputField.value = value;
+    }
+    } else if(xhr.status === 400) {
+      const outOfStockElement = document.getElementById('out-ofstock-'+itemId)
+      outOfStockElement.style.display = 'block';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Product is out of stock!',
+      });
+
+    } else {
+      console.log(xhr.statusText);
+    }
+  };
+  xhr.onerror = function () {
+    console.log(xhr.statusText);
+  };
+  xhr.send(JSON.stringify({ itemId }));
+}
+
+
+function decrementCart(event) {
+  event.preventDefault();
+
+  const itemId = event.target.dataset.id; // Get the id of the item associated with the button
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', '/decrementCart');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const outOfStockElement = document.getElementById('out-ofstock-'+itemId)
+      outOfStockElement.style.display = 'none'
+      const response = JSON.parse(xhr.responseText);
+      if (response.success) {
+        const inputField = document.querySelector('.input-number-' + itemId);
+    let value = parseInt(inputField.value);
+    value = isNaN(value) ? 1 : value;
+    if (value >= 1) { 
+        value--;
+        inputField.value = value;
+    }
+        const updatedPrice = response.updatedPrice;
+        const priceElement = document.querySelector(`#price-${itemId}`);
+        if (priceElement) {
+          priceElement.textContent = updatedPrice;
+        }
+        const totalElement = document.querySelector('#total-price');
+        totalElement.textContent = response.totalPrice.toFixed(2);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Failed to decrement quantity!',
+        });
+        
+      }
+    } else {
+      console.log(xhr.statusText);
+    }
+  };
+  xhr.onerror = function () {
+    console.log(xhr.statusText);
+  };
+  xhr.send(JSON.stringify({ itemId }));
+}
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    const removeItemBtns = document.querySelectorAll(".remove-item-btn");
+    removeItemBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const itemId = btn.dataset.itemId;
+        removeCartItem(itemId);
+      });
+    });
+
+    async function removeCartItem(itemId) {
+      try {
+        const response = await fetch("/removeCart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: itemId }),
+        });
+        if (response.ok) {
+          window.location.href = "/cart";
+        } else {
+          console.error("Failed to remove item from cart.");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+  </script>
+
+</body>
+
+</html>
