@@ -22,9 +22,10 @@ const { update } = require("../models/userModel");
 //   client_secret: process.env.client_secret,
 
 const Razorpay = require("razorpay");
+
 const instance = new Razorpay({
-  key_id: process.env.key_id,
-  key_secret: process.env.key_secret,
+  key_id: process.env.KEY_ID,
+  key_secret: process.env.KEY_SECRET,
 });
 
 // const accountsid = process.env.TWILIO_ACCOUNT_SID;
