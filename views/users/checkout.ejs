@@ -444,7 +444,7 @@
             console.log(response.amount);
             document.getElementById('ok').innerText = '$' + response.amount
 
-            document.getElementById('totalPrice').value = parseInt(response.amount+40);
+            document.getElementById('totalPrice').value = parseInt(response.amount);
 
             document.getElementById('codestate').style.color = "green"
             document.getElementById('codestate').innerText = 'Coupon applied successfully'

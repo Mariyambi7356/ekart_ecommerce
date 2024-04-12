@@ -104,48 +104,48 @@ const resendOTP = async (req, res) => {
 };
 
 const otpVerify = async (req, res) => {
-  let {password,referal,otp} = req.body;
+  let { password, referal, otp } = req.body;
   console.log(referal)
   let { phone } = req.session;
   console.log(otp, phone);
-try {
+  try {
     // client.verify.v2
-  //   .services(TWILIO_SERVICE_SID)
-  //   .verificationChecks.create({ to: `+91${phone}`, code: otp })
-  //   .then(async (verification_check) => {
-  //     if (verification_check.status == "approved") {
-        // req.session.otpcorrect = true;
-        const spassword = await securePassword(password);
-        const user = new User({
-          mobile: phone,
-          password: spassword,
-          is_verified:1,
-          referalCode:`#${phone}`
-        });
-        const userData = user.save();
-        if(referal){
-          const referalUser = await User.findOne({referalCode:referal})
-        referalUser.wallet +=100;
-        await Wallet.create({userId:referalUser._id,debit:false,amount:100})
-        await referalUser.save()
-        }
-        if (userData) {
-          res.redirect("/login");
-          msg = "verification success,now login with your account";
-        // }
-      } else {
-        res.render("verifySignup", { msg: "Otp incorrect" });
-      }
+    //   .services(TWILIO_SERVICE_SID)
+    //   .verificationChecks.create({ to: `+91${phone}`, code: otp })
+    //   .then(async (verification_check) => {
+    //     if (verification_check.status == "approved") {
+    // req.session.otpcorrect = true;
+    const spassword = await securePassword(password);
+    const user = new User({
+      mobile: phone,
+      password: spassword,
+      is_verified: 1,
+      referalCode: `#${phone}`
+    });
+    const userData = user.save();
+    if (referal) {
+      const referalUser = await User.findOne({ referalCode: referal })
+      referalUser.wallet += 100;
+      await Wallet.create({ userId: referalUser._id, debit: false, amount: 100 })
+      await referalUser.save()
+    }
+    if (userData) {
+      res.redirect("/login");
+      msg = "verification success,now login with your account";
+      // }
+    } else {
+      res.render("verifySignup", { msg: "Otp incorrect" });
+    }
     // })
 
     // .catch((error) => {
     //   console.log(error);
     // });
-  
-} catch (error) {
-      console.log(error);
-  
-}
+
+  } catch (error) {
+    console.log(error);
+
+  }
 };
 
 const loginLoad = async (req, res) => {
@@ -199,7 +199,7 @@ const loadHome = async (req, res) => {
     const session = req.session.user_id;
     const categoryData = await Category.find();
     const banner = await Banner.find();
-    
+
     let wallet;
     let user;
     if (session) {
@@ -471,11 +471,11 @@ const addToCart = async (req, res) => {
         });
       }
       if (userCart) {
-        
+
         const itemIndex = userCart.item.findIndex(
           (item) => item.product._id.toString() === productId
         );
-          console.log(itemIndex);
+        console.log(itemIndex);
         if (itemIndex >= 0) {
           console.log("Product already in Cart");
         } else {
@@ -492,9 +492,9 @@ const addToCart = async (req, res) => {
             }
           );
         }
-      } 
-      
-      
+      }
+
+
       else {
         const createNew = await Cart.create({
           userId: userId,
@@ -507,7 +507,7 @@ const addToCart = async (req, res) => {
           ],
         });
       }
-      
+
       res.redirect('/cart');
     } else {
       res.redirect("/login");
@@ -549,8 +549,8 @@ const incrementCart = async (req, res) => {
         console.log(total);
         await Cart.updateOne({ userId: userId }, { $set: { totalPrice: total } })
         totalPrice = total;
-        
-        res.json({ success: true, updatedPrice,totalPrice });
+
+        res.json({ success: true, updatedPrice, totalPrice });
       }
     }
   } catch (error) {
@@ -580,14 +580,14 @@ const decrementCart = async (req, res) => {
           { $inc: { "item.$.quantity": -1 } }
         );
         const updatedCart = await Cart.findOne({ userId: userId });
-       
-        let total=0;
+
+        let total = 0;
         updatedCart.item.forEach((value) => {
           total += value.price * value.quantity
         })
         console.log(total);
-        await Cart.updateOne({userId:userId},{$set:{totalPrice:total}})
-         totalPrice = total;
+        await Cart.updateOne({ userId: userId }, { $set: { totalPrice: total } })
+        totalPrice = total;
         const updatedItem = updatedCart.item.find(
           (item) => item._id.toString() === itemid
         );
@@ -700,7 +700,7 @@ const loadCheckOut = async (req, res) => {
         "item.product"
       );
       const allCoupons = await Coupon.find({
-        user: { $nin: [session] } 
+        user: { $nin: [session] }
       });
       console.log(allCoupons)
       console.log("allCoupons")
@@ -869,20 +869,20 @@ const deleteAddress = async (req, res) => {
 
 loadPaymentPage = async (req, res) => {
   try {
-    const {couponCode,totalDiscount,address} = req.body;
+    const { couponCode, totalDiscount, address } = req.body;
     console.log(req.body)
     if (!address) {
-     return  res.redirect('/addAddress')
+      return res.redirect('/addAddress')
     }
-    let hideCod ;
+    let hideCod;
     req.session.couponCode = couponCode
     req.session.totalDiscount = totalDiscount
 
     let session = req.session.user_id;
     const Total = req.body.totalPrice;
     req.session.total = Total;
-    if(Total > 1000) {
-      hideCod =true;
+    if (Total > 1000) {
+      hideCod = true;
     }
     const user = await User.findOne({ _id: session });
 
@@ -901,7 +901,7 @@ loadPaymentPage = async (req, res) => {
 
           orderStatus = 1;
 
-         return res.redirect(`/orderConfirmation?couponCode=${couponCode}&totalDiscount=${totalDiscount}&totalPrice=${Total}`);
+          return res.redirect(`/orderConfirmation?couponCode=${couponCode}&totalDiscount=${totalDiscount}&totalPrice=${Total}`);
         }
       }
 
@@ -909,8 +909,8 @@ loadPaymentPage = async (req, res) => {
     if (req.body.flexRadioDefault === "wallet") {
       req.session.ok = Total - wallet;
       req.session.wallet = wallet;
-      res.render("paymentPage", { Total, session, msg, wallet,hideCod });
-    } 
+      res.render("paymentPage", { Total, session, msg, wallet, hideCod });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -939,14 +939,14 @@ const orderConfirm = async (req, res) => {
         total: req.session.ok,
       };
 
-      
+
       const create_payment_json = {
         intent: "sale",
         payer: {
           payment_method: "paypal",
         },
         redirect_urls: {
-          return_url: process.env.SITE_URL+"/success",
+          return_url: process.env.SITE_URL + "/success",
           cancel_url: process.env.SITE_URL + "/checkout",
         },
         transactions: [
@@ -956,7 +956,7 @@ const orderConfirm = async (req, res) => {
           },
         ],
       };
-  
+
 
       paypal.payment.create(create_payment_json, function (error, payment) {
         if (error) {
@@ -1010,14 +1010,14 @@ const confirmPayment = async (req, res) => {
 
 const razorpayConfirm = async (req, res) => {
   try {
-    let {orderAmount} = req.query;
+    let { orderAmount } = req.query;
     console.log(req.query)
     console.log("req.query")
     orderAmount = orderAmount.replace(/,/g, '');
     let amount = parseInt(parseFloat(orderAmount) * 100);
 
     var options = {
-      amount: amount ,
+      amount: amount,
       currency: "INR",
       receipt: "order_rcptid_11qsasdasdasd",
     };
@@ -1027,7 +1027,7 @@ const razorpayConfirm = async (req, res) => {
     res.json({ order });
   } catch (error) {
     console.log(error)
-   }
+  }
 };
 
 const orderDetails = async (req, res) => {
@@ -1035,7 +1035,7 @@ const orderDetails = async (req, res) => {
     console.log(req.query)
     const session = req.session.user_id;
     let message = null;
-  
+
 
     if (!session) {
       res.redirect("/login");
@@ -1053,7 +1053,7 @@ const orderDetails = async (req, res) => {
 
 
 
-    if (orderStatus === 1 || req.query.payment ==='COD') {
+    if (orderStatus === 1 || req.query.payment === 'COD') {
 
       const cart = await Cart.findOne({ userId: session }).populate(
         "item.product"
@@ -1065,13 +1065,13 @@ const orderDetails = async (req, res) => {
       if (index !== undefined) {
         address = user.address[index];
       }
-       
-       let totalPrice = Number( req.query.totalPrice);
-      let couponCode =  req.query.couponCode;
-      let totalDiscount =  req.query.totalDiscount;
 
-      if((req.query.couponCode).length <= 0) couponCode = null ;
-      if((req.query.totalDiscount).length <=0) totalDiscount = null
+      let totalPrice = Number(req.query.totalPrice);
+      let couponCode = req.query.couponCode;
+      let totalDiscount = req.query.totalDiscount;
+
+      if ((req.query.couponCode).length <= 0) couponCode = null;
+      if ((req.query.totalDiscount).length <= 0) totalDiscount = null
 
       const orderItems = cart.item.map((item) => ({
         product: item.product._id,
@@ -1079,41 +1079,41 @@ const orderDetails = async (req, res) => {
         quantity: item.quantity,
       }));
       function generateTimestamp() {
-        
 
-        
+
+
         const timestamp = new Date().getTime();
         return timestamp;
-    }
-   
+      }
 
-    function generateRandomLetters(length) {
+
+      function generateRandomLetters(length) {
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         let randomLetters = '';
         for (let i = 0; i < length; i++) {
-            const randomIndex = Math.floor(Math.random() * letters.length);
-            randomLetters += letters.charAt(randomIndex);
+          const randomIndex = Math.floor(Math.random() * letters.length);
+          randomLetters += letters.charAt(randomIndex);
         }
         return randomLetters;
-    }
-    
-    
-    const timestamp = generateTimestamp();
-    
-    const randomLetters = generateRandomLetters(4);
-    if
-    (req.query.payment=='COD'){paymentType ='COD'}
-  
-  console.log(paymentType,"paymenttypeeeeeeee")
-    const orderId = randomLetters + timestamp;
-    if(paymentType=="wallet"){
-      if(decreasingAmount > 0){
-        await Wallet.create({userId:userData._id,debit:true,amount:decreasingAmount})
       }
-          else{
-            await Wallet.create({userId:userData._id,debit:true,amount:totalPrice})
-          }
-    }
+
+
+      const timestamp = generateTimestamp();
+
+      const randomLetters = generateRandomLetters(4);
+      if
+        (req.query.payment == 'COD') { paymentType = 'COD' }
+
+      console.log(paymentType, "paymenttypeeeeeeee")
+      const orderId = randomLetters + timestamp;
+      if (paymentType == "wallet") {
+        if (decreasingAmount > 0) {
+          await Wallet.create({ userId: userData._id, debit: true, amount: decreasingAmount })
+        }
+        else {
+          await Wallet.create({ userId: userData._id, debit: true, amount: totalPrice })
+        }
+      }
       const latestOrder = await Orders.findOne().sort("-orderCount").exec();
       const order = new Orders({
         userId: session,
@@ -1122,11 +1122,11 @@ const orderDetails = async (req, res) => {
         totalPrice,
         orderCount: latestOrder ? latestOrder.orderCount + 1 : 1,
         order_date: new Date().toLocaleDateString("en-GB"),
-        paymentType:paymentType,
-        
+        paymentType: paymentType,
+
         orderId,
-        discountAmount:totalDiscount,
-        couponDetails:couponCode,
+        discountAmount: totalDiscount,
+        couponDetails: couponCode,
       });
 
       await order.save();
@@ -1190,15 +1190,16 @@ const cancelOrder = async (req, res) => {
       orderData.paymentType === "online" ||
       orderData.paymentType === "wallet"
     ) {
-     let increaseAmount = orderData.totalPrice;
-     await Wallet.create({userId:session,debit:false,amount:increaseAmount})
+
+      let increaseAmount = orderData.totalPrice;
+      await Wallet.create({ userId: session, debit: false, amount: increaseAmount })
 
       await User.updateOne(
         { _id: session },
         { $inc: { wallet: increaseAmount } }
       );
     }
-   
+
 
     res.redirect("/orderDetails");
   } catch (error) {
@@ -1219,14 +1220,18 @@ const cancelProduct = async (req, res) => {
       { new: true }
     );
 
-    for (const item of updatedOrder.item) {
-      const productId = item.product._id;
-      const increaseQuantity = item.quantity;
-      await Product.updateOne(
-        { _id: productId },
-        { $inc: { quantity: increaseQuantity } }
-      );
+    const canceledItem = updatedOrder.item.find(item => item.product === productId && item.isCancel);
+
+    if (canceledItem) {
+      const { product, quantity } = canceledItem;
+      await Product.updateOne({
+        _id: product
+      }, {
+        $inc: { quantity: quantity }
+      })
     }
+
+    
 
     if (updatedOrder.paymentType === "online" || updatedOrder.paymentType === "wallet") {
       const increaseAmount = updatedOrder.totalPrice;
@@ -1287,6 +1292,8 @@ const returnOrder = async (req, res) => {
 const applyCoupon = async (req, res) => {
   try {
     let code = req.body.coupon;
+    console.log("Received coupon code:", code);
+    
     const session = req.session.user_id;
     const cart = await Cart.findOne({ userId: session });
     req.session.coupon = code;
@@ -1354,6 +1361,8 @@ const applyCoupon = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+
+  
 };
 
 ////////////////////////Logout/////////////////////////////////
@@ -1376,7 +1385,7 @@ const productFilter = async (req, res) => {
 
     const { categorys, search, brands, filterprice } = req.body;
     let page = req.body.page || 1;
-    
+
     if (!search) {
       if (filterprice != 0) {
         if (filterprice.length == 2) {
@@ -1387,26 +1396,26 @@ const productFilter = async (req, res) => {
               { price: { $gte: Number(filterprice[0]) } },
             ],
           })
-           
-          
+
+
             .populate("category")
             .populate("brand");
-            
+
         } else {
           product = await Product.find({
             status: 0,
             $and: [{ price: { $gte: Number(filterprice[0]) } }],
           })
-           
-          
-            
+
+
+
             .populate("category")
             .populate("brand");
         }
       } else {
         product = await Product.find({ status: 0 })
-         
-       
+
+
           .populate("category")
           .populate("brand");
       }
@@ -1430,8 +1439,8 @@ const productFilter = async (req, res) => {
               },
             ],
           })
-           
-          
+
+
 
             .populate("category")
             .populate("brand");
@@ -1452,8 +1461,8 @@ const productFilter = async (req, res) => {
               },
             ],
           })
-           
-         
+
+
 
             .populate("category")
             .populate("brand");
@@ -1465,8 +1474,8 @@ const productFilter = async (req, res) => {
             { productName: { $regex: ".*" + search + ".*", $options: "i" } },
           ],
         })
-         
-       
+
+
 
           .populate("category")
           .populate("brand");
@@ -1513,12 +1522,12 @@ const productFilter = async (req, res) => {
         Data[0] = product;
       }
     }
-    
+
     const totalPages = Math.ceil(Data[0].length / 3);
     const itemsPerPage = 3;
     const startingIndex = (page - 1) * itemsPerPage;
     const itemsToShow = [Data.flatMap(innerArray => innerArray.slice(startingIndex, startingIndex + itemsPerPage))];
-    res.json({ itemsToShow ,totalPages});
+    res.json({ itemsToShow, totalPages });
   } catch (error) {
     console.log(error.message);
   }
@@ -1616,31 +1625,31 @@ const notFound = async (req, res) => {
   }
 };
 
-const setDefaultAddress = async(req,res) => {
+const setDefaultAddress = async (req, res) => {
   try {
     const session = req.session.user_id;
-    const user =await User.findById(session)
-   if(!user) return res.status(400).json({msg:"error"})
-   const {index} = req.body;
-   user.defaultAddress = index;
-   await user.save()
-   console.log(user)
-   return res.status(200).json({msg:"success"})
+    const user = await User.findById(session)
+    if (!user) return res.status(400).json({ msg: "error" })
+    const { index } = req.body;
+    user.defaultAddress = index;
+    await user.save()
+    console.log(user)
+    return res.status(200).json({ msg: "success" })
   } catch (error) {
     console.log(error)
   }
 }
 
 
-const LoadWalletDetails = async(req,res) => {
+const LoadWalletDetails = async (req, res) => {
   try {
     const session = req.session.user_id;
     console.log(session)
-    const walletTransactions = await Wallet.find({userId:session})
+    const walletTransactions = await Wallet.find({ userId: session })
     // const walletTransactions = await Wallet.find()
 
     console.log(walletTransactions)
-    res.render("walletDetails",{session,walletTransactions})
+    res.render("walletDetails", { session, walletTransactions })
   } catch (error) {
     console.log(error)
   }
@@ -1648,29 +1657,29 @@ const LoadWalletDetails = async(req,res) => {
 
 const downloadInvoice = async (req, res) => {
   try {
-      const { id } = req.params
-      const userId = req.session.user_id
-      const order = await Orders.findOne({ _id: id }).populate("item.product")
-      const userData = await User.findOne({ _id: userId })
-      console.log("Invoice--------------------------------------------------->", id, userId, order, userData);
-      let result = await generateInvoicePDF(order, userData);
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader(
-          "Content-Disposition",
-          "attachment; filename=Invoice.pdf"
-      );
+    const { id } = req.params
+    const userId = req.session.user_id
+    const order = await Orders.findOne({ _id: id }).populate("item.product")
+    const userData = await User.findOne({ _id: userId })
+    console.log("Invoice--------------------------------------------------->", id, userId, order, userData);
+    let result = await generateInvoicePDF(order, userData);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=Invoice.pdf"
+    );
 
-      res.status(200).end(result);
+    res.status(200).end(result);
 
   } catch (error) {
-      console.log(error)
-      res.status(500).render("error500", { message: "Internal Server Error" })
+    console.log(error)
+    res.status(500).render("error500", { message: "Internal Server Error" })
   }
 }
- 
 
-  
- 
+
+
+
 module.exports = {
   loadRegister,
   insertUser,

@@ -44,7 +44,7 @@ admin_route.post("/", auth.isLogout, adminController.verifyLogin);
 
 
 admin_route.get("/home", auth.isLogin, adminController.loadDashboard);
-
+admin_route.get("/getCategoryBaseData",auth.isLogin, adminController.getCategoryBaseData);
 
 ///////////////////////User Controll  Route////////////////////
 

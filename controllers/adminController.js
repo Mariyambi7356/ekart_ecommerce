@@ -58,6 +58,7 @@ const verifyLogin = async (req, res) => {
 
 const loadDashboard = async (req, res) => {
   try {
+  
     let DailyEnd = new Date();
     let DailyStart = new Date(DailyEnd.getTime() - 86400000);
    
@@ -265,6 +266,18 @@ const loadDashboard = async (req, res) => {
       });
     });
 
+    const categoryWiseSales = {};
+    yearlySalesData.forEach((order) => {
+      order.item.forEach((item) => {
+        const category = item.product.category; 
+        if (category in categoryWiseSales) {
+          categoryWiseSales[category] += item.price * item.quantity;
+        } else {
+          categoryWiseSales[category] = item.price * item.quantity;
+        }
+      });
+    });
+    
 
     
     //////
@@ -334,6 +347,8 @@ const loadDashboard = async (req, res) => {
 data = data.map(prod => prod._doc)
 console.log(salesData);
 
+const categories = await Category.find();
+
 
     res.render("home", {
       topProductsDetails:data,
@@ -352,6 +367,8 @@ console.log(salesData);
       monthlySalesDetails: JSON.stringify(monthlySalesDetails),
       monthlyOrderCounts: JSON.stringify(monthlyOrderCounts),
       monthlyProductCounts: JSON.stringify(monthlyProductCounts),
+      categoryWiseSales,
+      categories
     });
   } catch (error) {
     console.log(error.message);
@@ -415,9 +432,49 @@ const logout = async (req, res) => {
   }
 };
 
-
-
-
+const getCategoryBaseData = async (req, res) => {
+  try {
+    const categoryName = req.query.categoryName;
+   
+    const currentYear = new Date().getFullYear();
+   
+    const monthlyQuantities = Array(12).fill(0);
+   
+    const orders = await Orders.find({
+      "start_date": {
+        $gte: new Date(`${currentYear}-01-01`),
+        $lte: new Date(`${currentYear}-12-31`)
+      }
+    });
+   
+    for (const order of orders) {
+      
+      for (const item of order.item) {
+       
+        const product = await Product.findById(item.product);
+        if (!product) {
+          continue; 
+        }
+      
+        const category = await Category.findById(product.category);
+        if (!category) {
+          continue; 
+        }
+       
+        if (category.name === categoryName) {
+          const monthIndex = order.start_date.getMonth(); 
+          monthlyQuantities[monthIndex] += item.quantity;
+        }
+      }
+    }
+    console.log(monthlyQuantities);
+   
+    return res.json({ count: monthlyQuantities });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 
 module.exports = {
@@ -428,5 +485,5 @@ module.exports = {
   adminDashboard,
   blockUser,
   unBlockUser,
-
+  getCategoryBaseData
 };
