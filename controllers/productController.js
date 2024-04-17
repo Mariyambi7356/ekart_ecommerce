@@ -22,93 +22,82 @@ const categoryDashboard = async (req, res) => {
     res.render("categoryDash", { category: categoryData, message });
     message = null;
   } catch (error) {
-    console.log(error.message);
+    console.error("Error in categoryDashboard:", error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
-
-
 
 const newCategory = async (req, res) => {
   try {
     res.render("new-category");
   } catch (error) {
-    console.log(error.message);
+    console.error("Error in newCategory:", error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
 
 const addCategory = async (req, res) => {
   try {
-    const name = req.body.name?.toLowerCase();
-    if (!name || name.trim().length < 2) {
-      return res.render("new-category", {
-        message: "Please enter a valid name",
-      });
+    const name = req.body.name?.trim();
+    if (!name || name.length < 2) {
+      return res.render("new-category", { message: "Please enter a valid name" });
     }
 
-    const existingCategory = await Category.findOne({
-      name: req.body.name?.toLowerCase(),
-    });
+    const existingCategory = await Category.findOne({ name: name.toLowerCase() });
     if (existingCategory) {
-      return res.render("new-category", {
-        message: "Category is Already added",
-      });
-
+      return res.render("new-category", { message: "Category is already added" });
     }
 
-    const category = new Category({
-      name: name,
-    });
+    const category = new Category({ name });
 
     const categoryData = await category.save();
 
     if (categoryData) {
-
       res.redirect("/admin/category-dashboard");
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error in addCategory:", error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
 
 const editCategoryLoad = async (req, res) => {
   try {
     const id = req.query.id;
-    const categoryData = await Category.findById({ _id: id });
+    const categoryData = await Category.findById(id);
     if (categoryData) {
       res.render("edit-category", { category: categoryData });
     } else {
       res.redirect("/admin/category-dashboard");
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error in editCategoryLoad:", error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
-
-
 
 const updateCategory = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const name = req.body.name?.trim();
 
-
-  const id = req.query.id;
-
-
-  const existingCategory = await Category.findOne({
-    name: req.body.name,
-  });
-  if (existingCategory) {
-    return res.render("edit-category", {
-      message: "Category is Already added",
-    });
-  }
-
-  const CategoryData = await Category.findByIdAndUpdate(
-    { _id: id },
-    {
-      $set: { name: req.body.name },
+    const existingCategory = await Category.findOne({ name });
+    if (existingCategory) {
+      return res.render("edit-category", { message: "Category is already added" });
     }
-  );
-  res.redirect("/admin/category-dashboard");
+
+    const categoryData = await Category.findByIdAndUpdate(
+      id,
+      { $set: { name } },
+      { new: true }
+    );
+    res.redirect("/admin/category-dashboard");
+  } catch (error) {
+    console.error("Error in updateCategory:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
 };
+
 
 ////////////////////Product Controller/////////////////////////////
 

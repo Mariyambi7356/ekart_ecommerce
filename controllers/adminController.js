@@ -201,6 +201,13 @@ const loadDashboard = async (req, res) => {
       endDate.setDate(endDate.getDate() + 1);
     }
 
+    console.log('startDate',startDate)
+    console.log('endDate',endDate)
+  if(startDate>=Date.now() || endDate >= Date.now()){
+   
+     
+  }
+
     let query = { is_delivered: true, is_returned: 0 };
     if (startDate && endDate) {
       query.delivered_date = { $gte: startDate, $lte: endDate };

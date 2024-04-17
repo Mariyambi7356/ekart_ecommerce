@@ -291,8 +291,8 @@
 
 
                 <input type="hidden" name="totalPrice" id="totalPrice" value="<%= (totalPrice + 40).toFixed(2)  %>">
-                <input type="hidden" name="couponCode" id="couponCode">
-                <input type="hidden" name="totalDiscount" id="totalDiscount">
+                <input type="hidden" name="couponCode" id="couponCode" value="">
+                <input type="hidden" name="totalDiscount" id="totalDiscount" value="">
 
 
 
@@ -515,6 +515,7 @@
       });
   }
 
+
   $("#coupon-form-submit").submit((e) => {
     let couponValue = document.getElementById('coupon').value;
     e.preventDefault();
@@ -523,6 +524,7 @@
       method: 'post',
       data: { coupon: couponValue },
       success: (response) => {
+        document.getElementById('couponCode').value = couponValue;
         if (response.status) {
           Swal.fire({
             icon: 'success',
@@ -629,29 +631,19 @@
     })
   }
 
- let totalPrice = document.getElementById('totalPrice').value
- let couponCode = document.getElementById('couponCode').value
- let totalDiscount = document.getElementById('totalDiscount').value
 
-  function success(Payment) {
-    Swal.fire({
-    icon: 'success',
-    title: 'Payment Successful',
-    text: 'Thank you for your purchase!',
-  });
-    location.href = `/orderConfirmation?totalPrice=${totalPrice}&couponCode=${couponCode}&totalDiscount${totalDiscount}&payment=${Payment}`
-  }
 </script>
 
-<!-- <script>
+<script>
  let totalPrice = document.getElementById('totalPrice').value
  let couponCode = document.getElementById('couponCode').value
  let totalDiscount = document.getElementById('totalDiscount').value
+
 
   function success() {
     location.href = `/orderConfirmation?totalPrice=${totalPrice}&couponCode${couponCode}&totalDiscount${totalDiscount}`
   }
-</script> -->
+</script>
 
 <script>
   

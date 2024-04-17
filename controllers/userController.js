@@ -1071,6 +1071,8 @@ const orderDetails = async (req, res) => {
       let couponCode = req.query.couponCode;
       let totalDiscount = req.query.totalDiscount;
 
+      console.log('couponCode = ' , couponCode , 'totalDiscount', totalDiscount )
+
       if ((req.query.couponCode).length <= 0) couponCode = null;
       if ((req.query.totalDiscount).length <= 0) totalDiscount = null
 
@@ -1193,6 +1195,7 @@ const cancelOrder = async (req, res) => {
     ) {
 
       let increaseAmount = orderData.totalPrice;
+      console.log(increaseAmount,"increaseAmount")
       await Wallet.create({ userId: session, debit: false, amount: increaseAmount })
 
       await User.updateOne(
@@ -1232,9 +1235,10 @@ const cancelProduct = async (req, res) => {
       })
     }
 
-    
+    console.log(session,"session");
 
     if (updatedOrder.paymentType === "online" || updatedOrder.paymentType === "wallet") {
+
       const increaseAmount = updatedOrder.totalPrice;
       await Wallet.create({ userId: session, debit: false, amount: increaseAmount });
       await User.updateOne(
