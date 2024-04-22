@@ -1104,8 +1104,7 @@ const orderDetails = async (req, res) => {
       const timestamp = generateTimestamp();
 
       const randomLetters = generateRandomLetters(4);
-      if
-        (req.query.payment == 'COD') { paymentType = 'COD' }
+      if (req.query.payment == 'COD') { paymentType = 'COD' }
 
       console.log(paymentType, "paymenttypeeeeeeee")
       const orderId = randomLetters + timestamp;
@@ -1159,6 +1158,8 @@ const orderDetails = async (req, res) => {
       .sort({ _id: -1 })
       .limit(1)
       .populate("item.product");
+
+      console.log("conformation page order items :0" , orders)
 
     res.render("orderConfirmation", { orders, session, msg });
   } catch (error) {

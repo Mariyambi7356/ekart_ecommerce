@@ -122,6 +122,11 @@ const addProduct = async (req, res) => {
 
 const insertProduct = async (req, res) => {
   try {
+    
+    if(req.body.price<0){
+      res.redirect('/admin/addProduct');
+    }
+
     const category = await Category.findOne({ name: req.body.category });
     const brand = await Brand.findOne({ brandName: req.body.brand });
 
@@ -138,6 +143,8 @@ const insertProduct = async (req, res) => {
         }
       }
     }
+
+    
 
     const product = new Product({
       productName: req.body.productName,
@@ -226,6 +233,7 @@ const updateProduct = async (req, res) => {
     if (!brand) {
       throw new Error('Brand not found');
     }
+    
 
     if (req.files) {
       for (let i = 0; i < req.files.length; i++) {
@@ -317,10 +325,9 @@ const addBrand = async (req, res) => {
       brandName: req.body.brandName,
     });
     if (existingBrand) {
-      res.redirect("/admin/new-brand");
+     res.redirect("/admin/new-brand");
       message = "Brand is Already added";
-
-
+      return;
     }
 
     const brand = new Brand({

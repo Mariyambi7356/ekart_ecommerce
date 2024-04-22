@@ -59,6 +59,12 @@ const addCoupon = async (req, res) => {
       });
     }
 
+    if(minAmount<maxDiscount){
+      return res.render("new-coupon", {
+        message: "Discount amount should be lower than minimum product amount.",
+      });
+    }
+
     const coupon = new Coupon({
       couponName: name,
       couponCode: code,
