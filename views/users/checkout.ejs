@@ -640,8 +640,8 @@
  let totalDiscount = document.getElementById('totalDiscount').value
 
 
-  function success() {
-    location.href = `/orderConfirmation?totalPrice=${totalPrice}&couponCode${couponCode}&totalDiscount${totalDiscount}`
+  function success(d) {
+    location.href = `/orderConfirmation?totalPrice=${totalPrice}&couponCode=${couponCode}&totalDiscount=${totalDiscount}&payment=${d}`
   }
 </script>
 

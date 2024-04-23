@@ -156,9 +156,8 @@ const updateCoupon = async (req, res) => {
     );
 
     if (maxDiscount > minAmount) {
-      return res.redirect("/admin/coupon-dashboard?error=Maximum%20discount%20should%20not%20exceed%20minimum%20product%20amount.");
-  }
-  
+      return res.redirect("/admin/coupon-dashboard");
+    }
 
     const updatedCoupon = await Coupon.updateOne(
       { _id: req.query.id },
