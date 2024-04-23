@@ -199,6 +199,8 @@ const unBlockProduct = async (req, res) => {
 };
 
 const editProductLoad = async (req, res) => {
+  
+  
   try {
     const id = req.query.id;
     req.session.id = id;
@@ -224,6 +226,11 @@ const editProductLoad = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
+
+    if(req.body.price < 1 || req.body.price == null){
+     return res.redirect("/admin/product-dashboard")
+    }
+
     const category = await Category.findOne({ name: req.body.category });
     const brand = await Brand.findOne({ brandName: req.body.brand });
 
@@ -233,37 +240,40 @@ const updateProduct = async (req, res) => {
     if (!brand) {
       throw new Error('Brand not found');
     }
-    
 
-    if (req.files) {
+    let arrImages = [];
+
+    if (req.files && req.files.length > 0) {
       for (let i = 0; i < req.files.length; i++) {
-        const image = req.files[i].path;
-        const uploadResponse = await cloudinary.uploader.upload(image);
-        const imageURL = uploadResponse.secure_url;
-        const addImage = await Product.updateOne(
-          { _id: req.query.id },
-          { $push: { productImages: imageURL } }
-        );
+        const file = req.files[i];
+        const mimeType = mime.lookup(file.originalname);
+        if (mimeType && mimeType.includes("image/")) {
+          const result = await cloudinary.uploader.upload(file.path);
+          arrImages.push(result.secure_url);
+        }
       }
     }
 
+    const updateFields = {
+      productName: req.body.productName,
+      price: req.body.price,
+      description: req.body.description,
+      quantity: req.body.quantity,
+      category: category._id,
+      brand: brand._id,
+      status: 0,
+    };
 
-    const productData = await Product.updateOne(
+   
+    if (arrImages.length > 0) {
+      updateFields.productImages = arrImages;
+    }
+
+    const productData = await Product.findOneAndUpdate(
       { _id: req.query.id },
-      {
-        $set: {
-          productName: req.body.productName,
-          price: req.body.price,
-          description: req.body.description,
-          quantity: req.body.quantity,
-          category: category._id,
-          brand: brand._id,
-          status: 0,
-        },
-      }
+      { $set: updateFields },
+      { new: true }
     );
-
-
 
     if (productData) {
       res.redirect("/admin/product-dashboard");
@@ -273,6 +283,7 @@ const updateProduct = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
 
 const deleteImage = async (req, res) => {
   try {

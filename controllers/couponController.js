@@ -134,9 +134,6 @@ const editCouponLoad = async (req, res) => {
 
 const updateCoupon = async (req, res) => {
   try {
-    console.log("hjdaskhdaskdkhaskhaskjasdh");
-    console.log(req.query.id);
-
     const {
       id,
       couponName,
@@ -157,6 +154,11 @@ const updateCoupon = async (req, res) => {
       minAmount,
       quantity
     );
+
+    if (maxDiscount > minAmount) {
+      return res.redirect("/admin/coupon-dashboard?error=Maximum%20discount%20should%20not%20exceed%20minimum%20product%20amount.");
+  }
+  
 
     const updatedCoupon = await Coupon.updateOne(
       { _id: req.query.id },
